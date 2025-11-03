@@ -1,0 +1,81 @@
+#include <stdio.h>
+#include <ctype.h>   // for isdigit()
+#include <stdlib.h>  // for atoi()
+
+#define MAX 100
+
+int stack[MAX];
+int top = -1;
+
+// Push function
+void push(int x) {
+    if (top == MAX - 1) {
+        printf("Stack Overflow\n");
+    } else {
+        stack[++top] = x;
+    }
+}
+
+// Pop function
+int pop() {
+    if (top == -1) {
+        printf("Stack Underflow\n");
+        return -1;
+    } else {
+        return stack[top--];
+    }
+}
+
+// Function to evaluate postfix expression
+int evaluatePostfix(char *exp) {
+    int i;
+    for (i = 0; exp[i] != '\0'; i++) {
+        char c = exp[i];
+
+        // Skip spaces
+        if (c == ' ' || c == '\t')
+            continue;
+
+        // If operand (number), push to stack
+        if (isdigit(c)) {
+            push(c - '0');   // Convert char to int
+        }
+        // If operator, pop two operands and apply operator
+        else {
+            int val2 = pop();
+            int val1 = pop();
+
+            switch (c) {
+                case '+':
+                    push(val1 + val2);
+                    break;
+                case '-':
+                    push(val1 - val2);
+                    break;
+                case '*':
+                    push(val1 * val2);
+                    break;
+                case '/':
+                    push(val1 / val2);
+                    break;
+                default:
+                    printf("Invalid operator: %c\n", c);
+                    return -1;
+            }
+        }
+    }
+    return pop();
+}
+
+// Main function
+int main() {
+    char exp[MAX];
+
+    printf("Enter a postfix expression (single digits, no spaces): ");
+    scanf("%s", exp);
+
+    int result = evaluatePostfix(exp);
+    printf("Result = %d\n", result);
+
+    return 0;
+}
