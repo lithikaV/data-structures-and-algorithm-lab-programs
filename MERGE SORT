@@ -1,0 +1,70 @@
+#include <stdio.h>
+
+// Function to merge two halves
+void merge(int arr[], int left, int mid, int right) {
+    int i = left, j = mid + 1, k = 0;
+    int temp[100];
+
+    // Merge the two sorted halves
+    while (i <= mid && j <= right) {
+        if (arr[i] < arr[j]) {
+            temp[k++] = arr[i++];
+        } else {
+            temp[k++] = arr[j++];
+        }
+    }
+
+    // Copy remaining elements of left half
+    while (i <= mid) {
+        temp[k++] = arr[i++];
+    }
+
+    // Copy remaining elements of right half
+    while (j <= right) {
+        temp[k++] = arr[j++];
+    }
+
+    // Copy sorted elements back to original array
+    for (i = left, k = 0; i <= right; i++, k++) {
+        arr[i] = temp[k];
+    }
+}
+
+// Merge Sort function
+void mergeSort(int arr[], int left, int right) {
+    if (left < right) {
+        int mid = (left + right) / 2;
+
+        mergeSort(arr, left, mid);        // Sort left half
+        mergeSort(arr, mid + 1, right);   // Sort right half
+        merge(arr, left, mid, right);     // Merge both halves
+    }
+}
+
+int main() {
+    int deptA[] = {102, 118, 125, 145};
+    int deptB[] = {101, 120, 132, 150, 170};
+
+    int sizeA = sizeof(deptA) / sizeof(deptA[0]);
+    int sizeB = sizeof(deptB) / sizeof(deptB[0]);
+
+    // Combine both arrays
+    int totalSize = sizeA + sizeB;
+    int merged[100];
+    
+    for (int i = 0; i < sizeA; i++)
+        merged[i] = deptA[i];
+    
+    for (int i = 0; i < sizeB; i++)
+        merged[sizeA + i] = deptB[i];
+
+    // Apply Merge Sort
+    mergeSort(merged, 0, totalSize - 1);
+
+    // Print output
+    printf("Merged and Sorted IDs: ");
+    for (int i = 0; i < totalSize; i++)
+        printf("%d ", merged[i]);
+
+    return 0;
+}
